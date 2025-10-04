@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        p {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .conversion-types {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .conversion-type {
+            flex: 1;
+            padding: 15px;
+            margin: 0 10px;
+            background: linear-gradient(135deg, #1a2a6c, #2a3a8c);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .conversion-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .conversion-type.active {
+            background: linear-gradient(135deg, #b21f1f, #d21f1f);
+        }
+        
+        .conversion-type h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .conversion-type p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .formula {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #1a2a6c, #2a3a8c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex: 1;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            display: none;
+            border-left: 5px solid #1a2a6c;
+        }
+        
+        .result h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .result p {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.2rem;
+        }
+        
+        .history {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .history h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        #history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .conversion-types {
+                flex-direction: column;
+            }
+            
+            .conversion-type {
+                margin: 5px 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Temperature Converter</h1>
+        <p>Convert between Fahrenheit and Celsius with ease</p>
+        
+        <div class="conversion-types">
+            <div class="conversion-type" id="f-to-c">
+                <h3>Fahrenheit to Celsius</h3>
+                <p>(°F − 32) ÷ 1.8 = °C</p>
+            </div>
+            <div class="conversion-type" id="c-to-f">
+                <h3>Celsius to Fahrenheit</h3>
+                <p>(°C × 1.8) + 32 = °F</p>
+            </div>
+        </div>
+        
+        <div class="formula" id="formula">
+            Select a conversion type to see the formula
+        </div>
+        
+        <div class="button-group">
+            <button id="convert-btn">Convert Temperature</button>
+            <button id="clear-btn">Clear History</button>
+        </div>
+        
+        <div class="error" id="error-msg">
+            Please enter a valid temperature value
+        </div>
+        
+        <div class="result" id="result">
+            <h2>Conversion Result</h2>
+            <p id="result-text"></p>
+        </div>
+        
+        <div class="history">
+            <h3>Conversion History</h3>
+            <div id="history-list">
+                <!-- History items will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const fToCButton = document.getElementById('f-to-c');
+        const cToFButton = document.getElementById('c-to-f');
+        const formulaDisplay = document.getElementById('formula');
+        const convertBtn = document.getElementById('convert-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('result-text');
+        const errorMsg = document.getElementById('error-msg');
+        const historyList = document.getElementById('history-list');
+        
+        // Conversion type (default: Fahrenheit to Celsius)
+        let conversionType = 'f-to-c';
+        
+        // Initialize the UI
+        function init() {
+            fToCButton.classList.add('active');
+            formulaDisplay.textContent = 'Formula: (°F − 32) ÷ 1.8 = °C';
+        }
+        
+        // Set conversion type
+        fToCButton.addEventListener('click', function() {
+            conversionType = 'f-to-c';
+            fToCButton.classList.add('active');
+            cToFButton.classList.remove('active');
+            formulaDisplay.textContent = 'Formula: (°F − 32) ÷ 1.8 = °C';
+        });
+        
+        cToFButton.addEventListener('click', function() {
+            conversionType = 'c-to-f';
+            cToFButton.classList.add('active');
+            fToCButton.classList.remove('active');
+            formulaDisplay.textContent = 'Formula: (°C × 1.8) + 32 = °F';
+        });
+        
+        // Convert temperature
+        convertBtn.addEventListener('click', function() {
+            // Hide previous results/errors
+            resultDiv.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // Get temperature value using prompt
+            const tempInput = prompt(`Enter temperature in ${conversionType === 'f-to-c' ? 'Fahrenheit' : 'Celsius'}:`);
+            
+            // Handle cancel or empty input
+            if (tempInput === null || tempInput.trim() === '') {
+                errorMsg.textContent = 'No temperature value provided.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            // Convert to number and validate
+            const temperature = parseFloat(tempInput);
+            
+            if (isNaN(temperature)) {
+                errorMsg.textContent = 'Please enter a valid numeric temperature.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            // Perform conversion
+            let convertedTemp, fromUnit, toUnit;
+            
+            if (conversionType === 'f-to-c') {
+                convertedTemp = (temperature - 32) / 1.8;
+                fromUnit = '°F';
+                toUnit = '°C';
+            } else {
+                convertedTemp = (temperature * 1.8) + 32;
+                fromUnit = '°C';
+                toUnit = '°F';
+            }
+            
+            // Format result to 2 decimal places
+            const formattedResult = convertedTemp.toFixed(2);
+            
+            // Display result
+            resultText.textContent = `${temperature}${fromUnit} = ${formattedResult}${toUnit}`;
+            resultDiv.style.display = 'block';
+            
+            // Add to history
+            addToHistory(temperature, fromUnit, formattedResult, toUnit);
+        });
+        
+        // Add conversion to history
+        function addToHistory(fromTemp, fromUnit, toTemp, toUnit) {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.textContent = `${fromTemp}${fromUnit} → ${toTemp}${toUnit}`;
+            historyList.appendChild(historyItem);
+            
+            // Scroll to bottom
+            historyList.scrollTop = historyList.scrollHeight;
+        }
+        
+        // Clear history
+        clearBtn.addEventListener('click', function() {
+            historyList.innerHTML = '';
+        });
+        
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
