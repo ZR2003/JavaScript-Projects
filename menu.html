@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Function Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2a6c, #2a3a8c);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 500px;
+        }
+        
+        .menu {
+            flex: 1;
+            min-width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #eaeaea;
+        }
+        
+        .tool-area {
+            flex: 2;
+            min-width: 300px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .menu-item:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .menu-item.active {
+            background-color: #e1f0fa;
+            border-left: 4px solid #1a2a6c;
+            color: #1a2a6c;
+        }
+        
+        .tool-container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .tool-title {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .tool-description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #1a2a6c;
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #1a2a6c, #2a3a8c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            display: none;
+            border-left: 5px solid #1a2a6c;
+        }
+        
+        .result h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .result p {
+            font-size: 1.2rem;
+            color: #333;
+            word-break: break-all;
+        }
+        
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .calc-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .calc-btn:hover {
+            background-color: #e8eaed;
+        }
+        
+        .calc-btn.operator {
+            background-color: #dadce0;
+        }
+        
+        .calc-btn.equals {
+            background-color: #1a2a6c;
+            color: white;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .city-list {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .city-list h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .city-item {
+            display: inline-block;
+            background-color: #e1f0fa;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #1a2a6c;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .menu {
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi-Function Toolkit</h1>
+            <p class="subtitle">A collection of useful tools at your fingertips</p>
+        </header>
+        
+        <div class="content">
+            <div class="menu">
+                <div class="menu-item active" data-tool="name-formatter">Format Name</div>
+                <div class="menu-item" data-tool="otp-generator">Generate OTP</div>
+                <div class="menu-item" data-tool="city-search">Search City</div>
+                <div class="menu-item" data-tool="date-display">Today's Date</div>
+                <div class="menu-item" data-tool="calculator">Mini Calculator</div>
+            </div>
+            
+            <div class="tool-area">
+                <!-- Name Formatter Tool -->
+                <div class="tool-container" id="name-formatter">
+                    <h2 class="tool-title">Name Formatter</h2>
+                    <p class="tool-description">Enter a name to capitalize the first letter of each word</p>
+                    
+                    <div class="input-group">
+                        <label for="name-input">Enter Name</label>
+                        <input type="text" id="name-input" placeholder="e.g., john doe">
+                        <div class="error" id="name-error">Please enter a valid name</div>
+                    </div>
+                    
+                    <button id="format-name-btn">Format Name</button>
+                    
+                    <div class="result" id="name-result">
+                        <h3>Formatted Name</h3>
+                        <p id="formatted-name"></p>
+                    </div>
+                </div>
+                
+                <!-- OTP Generator Tool -->
+                <div class="tool-container" id="otp-generator" style="display: none;">
+                    <h2 class="tool-title">OTP Generator</h2>
+                    <p class="tool-description">Generate a random 4-digit One-Time Password</p>
+                    
+                    <button id="generate-otp-btn">Generate OTP</button>
+                    
+                    <div class="result" id="otp-result">
+                        <h3>Your OTP</h3>
+                        <p id="otp-value"></p>
+                    </div>
+                </div>
+                
+                <!-- City Search Tool -->
+                <div class="tool-container" id="city-search" style="display: none;">
+                    <h2 class="tool-title">City Search</h2>
+                    <p class="tool-description">Search for a city in our database</p>
+                    
+                    <div class="city-list">
+                        <h4>Available Cities</h4>
+                        <div class="city-item">Karachi</div>
+                        <div class="city-item">Lahore</div>
+                        <div class="city-item">Islamabad</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="city-input">Enter City Name</label>
+                        <input type="text" id="city-input" placeholder="e.g., Karachi">
+                        <div class="error" id="city-error">Please enter a city name</div>
+                    </div>
+                    
+                    <button id="search-city-btn">Search City</button>
+                    
+                    <div class="result" id="city-result">
+                        <h3>Search Result</h3>
+                        <p id="city-search-result"></p>
+                    </div>
+                </div>
+                
+                <!-- Date Display Tool -->
+                <div class="tool-container" id="date-display" style="display: none;">
+                    <h2 class="tool-title">Today's Date</h2>
+                    <p class="tool-description">Display today's date in dd/mm/yyyy format</p>
+                    
+                    <button id="show-date-btn">Show Today's Date</button>
+                    
+                    <div class="result" id="date-result">
+                        <h3>Today's Date</h3>
+                        <p id="today-date"></p>
+                    </div>
+                </div>
+                
+                <!-- Calculator Tool -->
+                <div class="tool-container" id="calculator" style="display: none;">
+                    <h2 class="tool-title">Mini Calculator</h2>
+                    <p class="tool-description">Perform basic arithmetic operations</p>
+                    
+                    <div class="input-group">
+                        <label for="num1">First Number</label>
+                        <input type="number" id="num1" placeholder="Enter first number">
+                        <div class="error" id="num1-error">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="operation">Operation</label>
+                        <select id="operation">
+                            <option value="add">Addition (+)</option>
+                            <option value="subtract">Subtraction (-)</option>
+                            <option value="multiply">Multiplication (×)</option>
+                            <option value="divide">Division (÷)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="num2">Second Number</label>
+                        <input type="number" id="num2" placeholder="Enter second number">
+                        <div class="error" id="num2-error">Please enter a valid number</div>
+                        <div class="error" id="division-error">Cannot divide by zero</div>
+                    </div>
+                    
+                    <button id="calculate-btn">Calculate</button>
+                    
+                    <div class="result" id="calc-result">
+                        <h3>Calculation Result</h3>
+                        <p id="calc-value"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Multi-Function Toolkit &copy; 2023 - All rights reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const menuItems = document.querySelectorAll('.menu-item');
+        const toolContainers = document.querySelectorAll('.tool-container');
+        
+        // Tool-specific elements
+        // Name Formatter
+        const nameInput = document.getElementById('name-input');
+        const formatNameBtn = document.getElementById('format-name-btn');
+        const nameResult = document.getElementById('name-result');
+        const formattedName = document.getElementById('formatted-name');
+        const nameError = document.getElementById('name-error');
+        
+        // OTP Generator
+        const generateOtpBtn = document.getElementById('generate-otp-btn');
+        const otpResult = document.getElementById('otp-result');
+        const otpValue = document.getElementById('otp-value');
+        
+        // City Search
+        const cityInput = document.getElementById('city-input');
+        const searchCityBtn = document.getElementById('search-city-btn');
+        const cityResult = document.getElementById('city-result');
+        const citySearchResult = document.getElementById('city-search-result');
+        const cityError = document.getElementById('city-error');
+        
+        // Date Display
+        const showDateBtn = document.getElementById('show-date-btn');
+        const dateResult = document.getElementById('date-result');
+        const todayDate = document.getElementById('today-date');
+        
+        // Calculator
+        const num1Input = document.getElementById('num1');
+        const num2Input = document.getElementById('num2');
+        const operationSelect = document.getElementById('operation');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const calcResult = document.getElementById('calc-result');
+        const calcValue = document.getElementById('calc-value');
+        const num1Error = document.getElementById('num1-error');
+        const num2Error = document.getElementById('num2-error');
+        const divisionError = document.getElementById('division-error');
+        
+        // Cities array
+        const cities = ["Karachi", "Lahore", "Islamabad"];
+        
+        // Menu navigation
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active menu item
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show selected tool
+                const toolId = this.getAttribute('data-tool');
+                toolContainers.forEach(container => {
+                    container.style.display = 'none';
+                });
+                document.getElementById(toolId).style.display = 'block';
+                
+                // Clear previous results
+                clearResults();
+            });
+        });
+        
+        // Clear all result displays
+        function clearResults() {
+            const results = document.querySelectorAll('.result');
+            results.forEach(result => {
+                result.style.display = 'none';
+            });
+            
+            const errors = document.querySelectorAll('.error');
+            errors.forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+        
+        // Name Formatter
+        formatNameBtn.addEventListener('click', function() {
+            clearResults();
+            
+            const name = nameInput.value.trim();
+            
+            if (name === '') {
+                nameError.style.display = 'block';
+                return;
+            }
+            
+            // Capitalize first letter of each word
+            const formatted = name
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+                
+            formattedName.textContent = formatted;
+            nameResult.style.display = 'block';
+        });
+        
+        // OTP Generator
+        generateOtpBtn.addEventListener('click', function() {
+            clearResults();
+            
+            // Generate random 4-digit OTP
+            const otp = Math.floor(1000 + Math.random() * 9000);
+            otpValue.textContent = otp;
+            otpResult.style.display = 'block';
+        });
+        
+        // City Search
+        searchCityBtn.addEventListener('click', function() {
+            clearResults();
+            
+            const city = cityInput.value.trim();
+            
+            if (city === '') {
+                cityError.style.display = 'block';
+                return;
+            }
+            
+            // Check if city exists in array (case-insensitive)
+            const found = cities.some(c => c.toLowerCase() === city.toLowerCase());
+            
+            if (found) {
+                citySearchResult.textContent = `"${city}" found in the database!`;
+                citySearchResult.style.color = '#4caf50';
+            } else {
+                citySearchResult.textContent = `"${city}" not found in the database.`;
+                citySearchResult.style.color = '#f44336';
+            }
+            
+            cityResult.style.display = 'block';
+        });
+        
+        // Date Display
+        showDateBtn.addEventListener('click', function() {
+            clearResults();
+            
+            // Get current date and format as dd/mm/yyyy
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            
+            todayDate.textContent = `${day}/${month}/${year}`;
+            dateResult.style.display = 'block';
+        });
+        
+        // Calculator
+        calculateBtn.addEventListener('click', function() {
+            clearResults();
+            
+            const num1 = parseFloat(num1Input.value);
+            const num2 = parseFloat(num2Input.value);
+            const operation = operationSelect.value;
+            
+            let isValid = true;
+            
+            // Validate inputs
+            if (isNaN(num1)) {
+                num1Error.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(num2)) {
+                num2Error.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Check for division by zero
+            if (operation === 'divide' && num2 === 0) {
+                divisionError.style.display = 'block';
+                return;
+            }
+            
+            // Perform calculation
+            let result;
+            switch(operation) {
+                case 'add':
+                    result = num1 + num2;
+                    calcValue.textContent = `${num1} + ${num2} = ${result}`;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    calcValue.textContent = `${num1} - ${num2} = ${result}`;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    calcValue.textContent = `${num1} × ${num2} = ${result}`;
+                    break;
+                case 'divide':
+                    result = num1 / num2;
+                    calcValue.textContent = `${num1} ÷ ${num2} = ${result.toFixed(2)}`;
+                    break;
+            }
+            
+            calcResult.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
