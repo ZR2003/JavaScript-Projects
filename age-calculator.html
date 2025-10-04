@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            display: none;
+        }
+        
+        .result h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .result p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .adult {
+            color: #2ecc71;
+        }
+        
+        .minor {
+            color: #e67e22;
+        }
+        
+        .current-year {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Age Calculator</h1>
+        <p>Enter your information to calculate your age</p>
+        
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your name">
+            <div class="error" id="name-error">Please enter your name</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="birthYear">Birth Year</label>
+            <input type="number" id="birthYear" placeholder="Enter your birth year">
+            <div class="error" id="year-error">Please enter a valid birth year</div>
+            <div class="current-year" id="current-year"></div>
+        </div>
+        
+        <button id="calculate-btn">Calculate Age</button>
+        
+        <div class="result" id="result">
+            <h2>Your Result</h2>
+            <p id="result-text"></p>
+            <p id="result-status"></p>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const nameInput = document.getElementById('name');
+        const birthYearInput = document.getElementById('birthYear');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('result-text');
+        const resultStatus = document.getElementById('result-status');
+        const nameError = document.getElementById('name-error');
+        const yearError = document.getElementById('year-error');
+        const currentYearDisplay = document.getElementById('current-year');
+        
+        // Display current year
+        const currentYear = new Date().getFullYear();
+        currentYearDisplay.textContent = `Current year: ${currentYear}`;
+        
+        // Calculate age function
+        function calculateAge() {
+            // Get input values
+            const name = nameInput.value.trim();
+            const birthYear = parseInt(birthYearInput.value);
+            
+            // Reset errors
+            nameError.style.display = 'none';
+            yearError.style.display = 'none';
+            
+            // Validate inputs
+            let isValid = true;
+            
+            if (name === '') {
+                nameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(birthYear) || birthYear > currentYear || birthYear < 1900) {
+                yearError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+            
+            // Calculate age
+            const age = currentYear - birthYear;
+            
+            // Determine adult/minor status
+            let status;
+            if (age >= 18) {
+                status = 'Adult';
+                resultStatus.className = 'adult';
+            } else {
+                status = 'Minor';
+                resultStatus.className = 'minor';
+            }
+            
+            // Display result
+            resultText.textContent = `Hello ${name}, you are ${age} years old.`;
+            resultStatus.textContent = `You are an ${status}`;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Add event listener to button
+        calculateBtn.addEventListener('click', calculateAge);
+        
+        // Allow pressing Enter to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateAge();
+            }
+        });
+    </script>
+</body>
+</html>
